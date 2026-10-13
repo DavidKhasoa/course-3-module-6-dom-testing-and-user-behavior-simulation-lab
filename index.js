@@ -1,15 +1,57 @@
-// Step 1: Simulate User Behavior
-// - Add event listeners for button clicks and form submissions.
-// - Use JavaScript to dynamically update the DOM based on user actions.
+function addElementToDOM(targetId, content) {
+    const target = document.getElementById(targetId);
+    const p = document.createElement("p");
+    p.textContent = content;
+    target.appendChild(p);
+}
 
-// Step 2: DOM Manipulation Functions
-// - Implement functions to add, update, and remove DOM elements.
-// - Ensure all elements are dynamically created with appropriate attributes and content.
+function removeElementFromDOM(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.remove();
+    }
+}
 
-// Step 3: Error Handling
-// - Display error messages in the DOM for invalid inputs or missing elements.
-// - Create reusable functions to handle common error cases.
+function simulateClick(targetId, message) {
+    addElementToDOM(targetId, message);
+}
 
-// Step 4: Reusable Utilities
-// - Create modular utility functions, such as createElement(tag, attributes).
-// - Ensure all functions follow DRY principles for maintainability.
+function handleFormSubmit(formId, targetId) {
+    const form = document.getElementById(formId);
+    const error = document.getElementById("error-message")
+    const input = form.querySelector("input");
+    const text = input.value.trim();
+
+    if (text === "") {
+        error.textContent = "Input cannot be empty"
+        error.classList.remove("hidden");
+        return;
+    }
+
+    error.textContent = "";
+    error.classList.add("hidden");
+    addElementToDOM(targetId, text);
+    input.value = "";
+}
+
+if (typeof module !== "undefined") {
+    module.exports = {
+        addElementToDOM,
+        removeElementFromDOM,
+        simulateClick,
+        handleFormSubmit,
+    };
+}
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('simulate-click').addEventListener('click', () => {
+      simulateClick('dynamic-content', 'Button Clicked!');
+    });
+
+    document.getElementById('user-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      handleFormSubmit('user-form', 'dynamic-content');
+    });
+  });
+}
